@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { processResume } from "../services/resume.service";
+import { processResume, getResumeById } from "../services/resume.service";
 
 export const uploadResume = async (
   request: FastifyRequest,
@@ -7,7 +7,6 @@ export const uploadResume = async (
 ) => {
   try {
     const file = await request.file();
-
     if (!file) {
       return reply.status(400).send({
         message: "File required",
@@ -15,13 +14,28 @@ export const uploadResume = async (
     }
 
     const analysis = await processResume(file);
-    return {
+    return reply.send({
       analysis,
-    };
+    });
   } catch (error) {
     console.error("Error uploading resume:", error);
     return reply.status(500).send({
       message: "Failed to upload resume",
+    });
+  }
+};
+export const getResumeAnalysisById = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as { id: string };
+    const analysis = await getResumeById(id);
+    return reply.send(analysis);
+  } catch (error) {
+    console.error("Error getting resume analysis:", error);
+    return reply.status(500).send({
+      message: "Failed to get resume analysis",
     });
   }
 };

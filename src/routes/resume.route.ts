@@ -1,8 +1,11 @@
 import { FastifyPluginAsync } from "fastify";
-import { uploadResume } from "../controllers/resume.controller";
+import {
+  uploadResume,
+  getResumeAnalysisById,
+} from "../controllers/resume.controller";
 
 const resumeRoutes: FastifyPluginAsync = async (app) => {
   app.post("/upload", uploadResume);
+  app.get("/:id", getResumeAnalysisById);
 };
-
 export default resumeRoutes;

@@ -9,7 +9,6 @@ const app = Fastify({
 const start = async () => {
   try {
     await app.register(multipart);
-
     await app.register(resumeRoutes, {
       prefix: "/api/resume",
     });
