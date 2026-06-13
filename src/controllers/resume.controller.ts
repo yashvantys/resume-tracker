@@ -12,7 +12,13 @@ export const uploadResume = async (
         message: "File required",
       });
     }
-
+    request.log.info(
+      {
+        requestId: request.id,
+        fileName: file.filename,
+      },
+      "Resume upload started",
+    );
     const analysis = await processResume(file);
     return reply.send({
       analysis,
