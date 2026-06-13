@@ -6,19 +6,24 @@ export const saveResumeAnalysis = async (
   atsScore: number,
   analysis: object,
 ) => {
-  const query = `
-  INSERT INTO resume_analysis
-  (
-    id,
-    file_name,
-    ats_score,
-    analysis
-  )
-  VALUES ($1, $2, $3, $4)
-  RETURNING *
-`;
+  try {
+    const query = `
+                  INSERT INTO resume_analysis
+                      (
+                        id,
+                        file_name,
+                        ats_score,
+                        analysis
+                      )
+                      VALUES ($1, $2, $3, $4)
+                      RETURNING *
+                    `;
 
-  await pool.query(query, [id, fileName, atsScore, JSON.stringify(analysis)]);
+    await pool.query(query, [id, fileName, atsScore, JSON.stringify(analysis)]);
+  } catch (error) {
+    console.error("Error saving resume analysis:", error);
+    throw new Error("Failed to save resume analysis");
+  }
 };
 
 export const getResumeAnalysisById = async (id: string) => {
