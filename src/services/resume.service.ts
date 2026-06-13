@@ -1,6 +1,6 @@
 import { MultipartFile } from "@fastify/multipart";
 import { extractTextFromPdf } from "./pdf.service";
-import { analyzeResume } from "./openai.service";
+import { analyzeMatchedJobDescription, analyzeResume } from "./openai.service";
 import { v4 as uuidv4 } from "uuid";
 import {
   saveResumeAnalysis,
@@ -39,5 +39,25 @@ export const getResumeById = async (id: string) => {
   } catch (error) {
     console.error("Error getting resume analysis:", error);
     throw new Error("Failed to get resume analysis");
+  }
+};
+
+export const matchResumeWithJob = async (
+  resumeId: string,
+  jobDescription: string,
+) => {
+  try {
+    const resumeAnalysis = await getResumeById(resumeId);
+    if (!resumeAnalysis) {
+      throw new Error("Resume not found");
+    }
+    const jobDescriptionResponse = await analyzeResume(jobDescription);
+    const jobDescriptionAnalysis = JSON.parse(jobDescriptionResponse ?? "{}");
+    const resumeSkills = resumeAnalysis.analysis.skills;
+    const response = await analyzeMatchedJobDescription(resumeSkills, jobDescription);
+    return response;
+  } catch (error) {
+    console.error("Error matching resumes:", error);
+    throw new Error("Failed to match resumes");
   }
 };

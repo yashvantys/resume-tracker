@@ -1,5 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { processResume, getResumeById } from "../services/resume.service";
+import {
+  processResume,
+  getResumeById,
+  matchResumeWithJob,
+} from "../services/resume.service";
 
 export const uploadResume = async (
   request: FastifyRequest,
@@ -42,6 +46,27 @@ export const getResumeAnalysisById = async (
     console.error("Error getting resume analysis:", error);
     return reply.status(500).send({
       message: "Failed to get resume analysis",
+    });
+  }
+};
+
+export const matchResumes = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { resumeId, jobDescription } = request.body as {
+      resumeId: string;
+      jobDescription: string;
+    };
+
+    const result = await matchResumeWithJob(resumeId, jobDescription);
+
+    return reply.send(result);
+  } catch (error) {
+    console.error("Error matching resumes:", error);
+    return reply.status(500).send({
+      message: "Failed to match resumes",
     });
   }
 };
