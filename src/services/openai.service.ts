@@ -37,7 +37,7 @@ export async function analyzeResume(resumeText: string) {
 }
 
 export async function analyzeMatchedJobDescription(
-  skills: string[],
+  skills: string,
   jobDescription: string,
 ) {
   try {
@@ -47,7 +47,7 @@ export async function analyzeMatchedJobDescription(
         {
           role: "user",
           content: `
-          You are an ATS Resume Matching System.
+          ATS Resume Matching System.
 
           Compare the candidate resume with the job description.
 
@@ -74,8 +74,8 @@ export async function analyzeMatchedJobDescription(
             "recommendations": []
           }
 
-          Resume Skills:
-          ${skills.join(", ")}
+          Resume Analysis:
+          ${JSON.stringify(skills)}
 
           Job Description:
           ${jobDescription}

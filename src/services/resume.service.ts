@@ -51,10 +51,11 @@ export const matchResumeWithJob = async (
     if (!resumeAnalysis) {
       throw new Error("Resume not found");
     }
-    const jobDescriptionResponse = await analyzeResume(jobDescription);
-    const jobDescriptionAnalysis = JSON.parse(jobDescriptionResponse ?? "{}");
-    const resumeSkills = resumeAnalysis.analysis.skills;
-    const response = await analyzeMatchedJobDescription(resumeSkills, jobDescription);
+    const resumeData = resumeAnalysis.analysis;
+    const response = await analyzeMatchedJobDescription(
+      resumeData,
+      jobDescription,
+    );
     return response;
   } catch (error) {
     console.error("Error matching resumes:", error);
