@@ -1,9 +1,10 @@
 import Fastify from "fastify";
 import multipart from "@fastify/multipart";
 import resumeRoutes from "./routes/resume.route";
+import { logger } from "./utills/logger";
 
 const app = Fastify({
-  logger: true,
+  logger
 });
 
 const start = async () => {
